@@ -55,8 +55,6 @@ window.findNQueensSolution = function(n) {
 
   var found = false;
   
-  var showBoard = [];
-
   var recurseMe = function(x, solvedBoard) {
     if ( x === undefined ) { x = n - 1; }
     else { x = x; }
@@ -66,17 +64,17 @@ window.findNQueensSolution = function(n) {
       return solvedBoard;
     } else {
       for (var i = 0; i < n; i ++) {
-        var temp = solvedBoard.get(x);
-        temp[i] = 1;
-        solvedBoard.set(x, temp);      
+        // var temp = solvedBoard.get(x);
+        // temp[i] = 1;
+        // solvedBoard.set(x, temp);   
+        solvedBoard.togglePiece(x, i);
         if ( !(solvedBoard.hasAnyColConflicts() || solvedBoard.hasAnyRowConflicts() || 
             solvedBoard.hasAnyMajorDiagonalConflicts() || solvedBoard.hasAnyMinorDiagonalConflicts())) {        
           solvedBoard = recurseMe(x - 1, solvedBoard);
         }
         //prevent the extra rounds checking
         if (found) { return solvedBoard; }
-        temp[i] = 0;
-        solvedBoard.set(x, temp);
+        solvedBoard.togglePiece(x, i);
       }
       return solvedBoard;
     }
@@ -93,8 +91,41 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0; //fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  if (n === 0 || n === 1) { return 1; }
+  var board = new Board({n: n});
+
+  var found = false;
+  
+  var recurseMe = function(x, solvedBoard) {
+    if ( x === undefined ) { x = n - 1; }
+    else { x = x; }
+    solvedBoard = solvedBoard || board;
+
+    if (x === -1 ) {
+      found = true;
+      solutionCount++;
+      console.log(solutionCount);
+
+      return solvedBoard;
+    } else {
+      for (var i = 0; i < n; i ++) {
+        solvedBoard.togglePiece(x, i);      
+        if ( !(solvedBoard.hasAnyColConflicts() || solvedBoard.hasAnyRowConflicts() || 
+            solvedBoard.hasAnyMajorDiagonalConflicts() || solvedBoard.hasAnyMinorDiagonalConflicts())) {        
+          solvedBoard = recurseMe(x - 1, solvedBoard);
+        }
+        solvedBoard.togglePiece(x, i);
+        if (found ) {
+          found = false;
+          return solvedBoard; 
+        }  
+      }
+      return solvedBoard;
+    }
+  };
+  recurseMe();
+  console.log(solutionCount);
   return solutionCount;
 };
