@@ -224,7 +224,6 @@
     hasAnyMinorDiagonalConflicts: function() {
       var n = this.get('n');
       for (var i = 0; i < n - 1; i++) {
-        console.log('round ' + i);
         if (this.hasMinorDiagonalConflictAt(i)) {
           return true;
         }
