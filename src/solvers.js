@@ -37,10 +37,11 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  //var solutionCount = ;
-
-
-
+  var solutionCount;
+  var factorial = function(a) {
+    return a <= 1 ? 1 : factorial(a - 1) * a;
+  };
+  solutionCount = factorial(n);
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
@@ -49,33 +50,45 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   if (n === 0) { return []; }
   if (n === 1) { return [[1]]; }
+  var solution = [];
+  var board = new Board({n: n});
 
-  var solution = []; //fixme
-  var board = new Board({n:n});
-  for(var b = 0; b < n; b++){
+  var found = false;
+  var recurseMe = function(x, solvedBoard) {
+    x = x || n - 1;
+    solvedBoard = solvedBoard || board;
+    
+    if (x === -1 ) {
+      found = true;
+      return solvedBoard;
+    } else {
+      for (var i = 0; i < n; i ++) {
+        var temp = solvedBoard.get(x);
+        temp[i] = 1;
+        solvedBoard.set(x, temp);
+        console.log('row, col: ' + x + ',' + i);
+        //console.log('column: ' + solvedBoard.hasAnyColConflicts());
+        //console.log('row: ' + solvedBoard.hasAnyRowConflicts());
+        //console.log('major: ' + solvedBoard.hasAnyMajorDiagonalConflicts());
+        //console.log('minor: ' + solvedBoard.hasAnyMinorDiagonalConflicts());
+        if ( !(solvedBoard.hasAnyColConflicts() || solvedBoard.hasAnyRowConflicts() || 
+            solvedBoard.hasAnyMajorDiagonalConflicts() || solvedBoard.hasAnyMinorDiagonalConflicts())) {
+          solvedBoard = recurseMe(x - 1, solvedBoard);
+        }
+        //prevent the extra rounds checking
+        if (found) { return solvedBoard; }
+        temp[i] = 0;
+        solvedBoard.set(x, temp);
+      }
+      return solvedBoard;
+    }
+  };
+
+  board = recurseMe();
+  for (var b = 0; b < n; b++) {
     solution.push(board.get(b));
   }
-
-  var recurseMe = function(x, solvedBoard) {
-  //   x = n || x;
-  //   solvedBoard = solution || solvedBoard;
-    
-  //   if(x !== 0){
-  //     for(var i = 0; i < n; i ++){
-  //       solvedBoard[x][i] = 1;
-  //       if( board.hasAnyColConflicts() && board.hasAnyRowConflicts() && 
-  //           board.hasAnyMajorDiagonalConflicts() && hasAnyMinorDiagonalConflicts()){
-  //         solvedBoard = recurseMe(x-1, solvedBoard);
-  //       }else{
-  //         solvedBoard[x][i] = 0;
-  //       }
-  //     }
-  //   }
-  //   return solvedBoard;
-  // };
-  // return recurseMe();
-
-  //console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution)); 
+  return solution;
 };
 
 
