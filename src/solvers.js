@@ -54,10 +54,13 @@ window.findNQueensSolution = function(n) {
   var board = new Board({n: n});
 
   var found = false;
+  
+  var showBoard = [];
+
   var recurseMe = function(x, solvedBoard) {
-    x = x || n - 1;
+    if ( x === undefined ) { x = n - 1; }
+    else { x = x; }
     solvedBoard = solvedBoard || board;
-    
     if (x === -1 ) {
       found = true;
       return solvedBoard;
@@ -65,14 +68,9 @@ window.findNQueensSolution = function(n) {
       for (var i = 0; i < n; i ++) {
         var temp = solvedBoard.get(x);
         temp[i] = 1;
-        solvedBoard.set(x, temp);
-        console.log('row, col: ' + x + ',' + i);
-        //console.log('column: ' + solvedBoard.hasAnyColConflicts());
-        //console.log('row: ' + solvedBoard.hasAnyRowConflicts());
-        //console.log('major: ' + solvedBoard.hasAnyMajorDiagonalConflicts());
-        //console.log('minor: ' + solvedBoard.hasAnyMinorDiagonalConflicts());
+        solvedBoard.set(x, temp);      
         if ( !(solvedBoard.hasAnyColConflicts() || solvedBoard.hasAnyRowConflicts() || 
-            solvedBoard.hasAnyMajorDiagonalConflicts() || solvedBoard.hasAnyMinorDiagonalConflicts())) {
+            solvedBoard.hasAnyMajorDiagonalConflicts() || solvedBoard.hasAnyMinorDiagonalConflicts())) {        
           solvedBoard = recurseMe(x - 1, solvedBoard);
         }
         //prevent the extra rounds checking
