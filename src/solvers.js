@@ -126,3 +126,45 @@ window.countNQueensSolutions = function(n) {
   recurseMe();
   return solutionCount;
 };
+
+window.bitwiseNQueensSolution = function(n) {
+  if (n === 0) { return []; }
+  if (n === 1) { return [[1]]; }
+  var solution = [];
+  for (var i = 0; i < n; i++) {
+    solution.push(0);
+  }
+  var recurseMe = function(x, solvedBoard) {
+    if ( x === undefined ) { x = n - 1; 
+    } else { x = x; }
+    solvedBoard = solvedBoard || solution;
+
+    if (x === -1 ) {
+      found = true;
+      return solvedBoard;
+    } else {
+      for (var i = 0; i < n; i ++) { 
+        solvedBoard[x] = Math.pow(2, n-i-1);
+        if ( !(solvedBoard.hasAnyQueensConflicts()) ) {        
+          solvedBoard = recurseMe(x - 1, solvedBoard);
+        }
+        //prevent the extra rounds checking
+        if (found) { return solvedBoard; }
+        solvedBoard.togglePiece(x, i);
+      }
+      return solvedBoard;
+    }
+  };
+
+  var hasAnyQueensConflicts = function(board) {
+    for (var i = 0; i < board.length; i++) {
+      if (board[])
+    }
+  }
+
+  board = recurseMe();
+  for (var b = 0; b < n; b++) {
+    solution.push(board.get(b));
+  }
+  return solution; 
+};
