@@ -14,8 +14,10 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 /*
-findNRooksSolution: 
-countNRooksSolution:
+findNRooksSolution: O(n^2)
+countNRooksSolution: O(n)
+findNQueensSolution: O(n^3)
+countNQueensSolution: O(n^n)
 */
 
 
