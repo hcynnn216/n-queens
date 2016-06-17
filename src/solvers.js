@@ -13,6 +13,11 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
+/*
+findNRooksSolution: 
+countNRooksSolution:
+*/
+
 
 
 window.findNRooksSolution = function(n) {
@@ -42,7 +47,6 @@ window.countNRooksSolutions = function(n) {
     return a <= 1 ? 1 : factorial(a - 1) * a;
   };
   solutionCount = factorial(n);
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
 
@@ -52,24 +56,20 @@ window.findNQueensSolution = function(n) {
   if (n === 1) { return [[1]]; }
   var solution = [];
   var board = new Board({n: n});
-
   var found = false;
   
   var recurseMe = function(x, solvedBoard) {
-    if ( x === undefined ) { x = n - 1; }
-    else { x = x; }
+    if ( x === undefined ) { x = n - 1; 
+    } else { x = x; }
     solvedBoard = solvedBoard || board;
+
     if (x === -1 ) {
       found = true;
       return solvedBoard;
     } else {
-      for (var i = 0; i < n; i ++) {
-        // var temp = solvedBoard.get(x);
-        // temp[i] = 1;
-        // solvedBoard.set(x, temp);   
+      for (var i = 0; i < n; i ++) { 
         solvedBoard.togglePiece(x, i);
-        if ( !(solvedBoard.hasAnyColConflicts() || solvedBoard.hasAnyRowConflicts() || 
-            solvedBoard.hasAnyMajorDiagonalConflicts() || solvedBoard.hasAnyMinorDiagonalConflicts())) {        
+        if ( !(solvedBoard.hasAnyQueensConflicts()) ) {        
           solvedBoard = recurseMe(x - 1, solvedBoard);
         }
         //prevent the extra rounds checking
@@ -88,14 +88,12 @@ window.findNQueensSolution = function(n) {
 };
 
 
-
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
   var solutionCount = 0; //fixme
 
   if (n === 0 || n === 1) { return 1; }
   var board = new Board({n: n});
-
   var found = false;
   
   var recurseMe = function(x, solvedBoard) {
@@ -106,14 +104,12 @@ window.countNQueensSolutions = function(n) {
     if (x === -1 ) {
       found = true;
       solutionCount++;
-      console.log(solutionCount);
 
       return solvedBoard;
     } else {
       for (var i = 0; i < n; i ++) {
         solvedBoard.togglePiece(x, i);      
-        if ( !(solvedBoard.hasAnyColConflicts() || solvedBoard.hasAnyRowConflicts() || 
-            solvedBoard.hasAnyMajorDiagonalConflicts() || solvedBoard.hasAnyMinorDiagonalConflicts())) {        
+        if ( !(solvedBoard.hasAnyQueensConflicts()) ) {        
           solvedBoard = recurseMe(x - 1, solvedBoard);
         }
         solvedBoard.togglePiece(x, i);
@@ -126,6 +122,5 @@ window.countNQueensSolutions = function(n) {
     }
   };
   recurseMe();
-  console.log(solutionCount);
   return solutionCount;
 };
